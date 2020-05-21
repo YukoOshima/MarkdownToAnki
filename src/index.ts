@@ -16,7 +16,6 @@ if (
 }
 
 processLineByLine(fileName).then((ankiCards) => {
-  console.log(ankiCards);
   addCardToAnki(ankiCards, deckName).then((resp) => {
     console.log(resp);
   });

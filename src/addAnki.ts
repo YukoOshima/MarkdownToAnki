@@ -1,5 +1,6 @@
 import axios from "axios";
 import { md } from "./markdown";
+import { markdown } from "./style";
 
 const url = "http://127.0.0.1:8765";
 
@@ -29,8 +30,8 @@ export const addCardToAnki = async (ankiCards: string[], deckName: string) => {
   const addCardPromise = [];
   while (ankiCards.length) {
     const newCards = ankiCards.splice(0, 2);
-    const front = md.render(newCards[0]);
-    const back = md.render(newCards[1]);
+    const front = md.render(newCards[0]) + markdown;
+    const back = md.render(newCards[1]) + markdown;
     addCardPromise.push(createCard(front, back, deckName));
   }
   return await Promise.all(addCardPromise);
