@@ -6,7 +6,7 @@
   "author": "yusen.meng <yusen.meng@shopee.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc && npm link"
   },
   "bin": {
     "manki": "./dist/index.js"
