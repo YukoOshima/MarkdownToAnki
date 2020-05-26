@@ -11,21 +11,21 @@ export async function processLineByLine(fileName: string) {
       crlfDelay: Infinity,
     });
     const cards: string[] = [];
-    let index = 0;
+    let index = -1;
     rl.on("line", (line: string) => {
-      if (line.toLowerCase().indexOf("q:") !== -1) {
+      if (line.toLowerCase().indexOf("### q:") !== -1) {
         index++;
-        return;
       }
-      if (line.toLowerCase().indexOf("a:") !== -1) {
+      if (line.toLowerCase().indexOf("### a:") !== -1) {
         index++;
-        return;
       }
       if (typeof cards[index] === "undefined") cards[index] = "";
       cards[index] += line + "\n";
+      console.log(cards[index]);
     });
     await once(rl, "close");
-    return cards.slice(1);
+    console.log(cards);
+    return cards;
   } catch (err) {
     console.error(err);
     return [];

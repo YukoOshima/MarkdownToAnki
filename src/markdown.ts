@@ -5,6 +5,7 @@ import { style } from "./style";
 export const md: MarkdownIt = new MarkdownIt({
   html: true,
   linkify: true,
+  typographer: true,
   highlight: (str, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -20,4 +21,4 @@ export const md: MarkdownIt = new MarkdownIt({
       '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>"
     );
   },
-});
+}).enable("image");
