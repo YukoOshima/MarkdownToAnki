@@ -12,10 +12,10 @@ export async function getMarkdownContent(fileName: string) {
     const cards: string[] = [];
     let index = -1;
     rl.on("line", (line: string) => {
-      if (line.toLowerCase().indexOf("### q:") !== -1) {
+      if (line.toLowerCase().indexOf("q:") !== -1) {
         index++;
       }
-      if (line.toLowerCase().indexOf("### a:") !== -1) {
+      if (line.toLowerCase().indexOf("a:") !== -1) {
         index++;
       }
       if (typeof cards[index] === "undefined") cards[index] = "";

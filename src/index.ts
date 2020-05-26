@@ -24,8 +24,13 @@ async function main() {
     const picBody = await scanImgs(picPath);
     const markdownContent = await getMarkdownContent(fileName);
     const cardBody = await generateCardsToAnki(markdownContent, deckName);
-    const ankiResp = await postAnkiConnect([...picBody, ...cardBody]);
-    console.log(ankiResp);
+    console.log("upload cardbody");
+    const cardResp = await postAnkiConnect(cardBody);
+    console.log(cardResp);
+    console.log("upload images");
+    const imageResp = await postAnkiConnect(picBody);
+    console.log(imageResp);
+    // const ankiResp = await postAnkiConnect([cardBody[0]]);
   } catch (err) {
     console.log(err);
   }

@@ -1,11 +1,10 @@
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
+import Jimp from "jimp";
 
 const pReadDir = promisify(fs.readdir);
 const pReadFile = promisify(fs.readFile);
-
-const directoryPath = path.join(__dirname);
 
 async function base64_encode(file: string) {
   const bitmap = await pReadFile(file);
@@ -19,7 +18,9 @@ export async function scanImgs(directoryPath: string) {
 }
 
 export async function generatePicUploadBody(file: string) {
-  const data = await base64_encode(file);
+  const lerna = await Jimp.read(file);
+  const data = await lerna.greyscale().getBase64Async(Jimp.MIME_JPEG);
+  console.log("data", data);
   const body = {
     action: "storeMediaFile",
     params: {
