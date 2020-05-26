@@ -13,11 +13,11 @@ export async function processLineByLine(fileName: string) {
     const cards: string[] = [];
     let index = 0;
     rl.on("line", (line: string) => {
-      if (line.toLowerCase().indexOf("### q") !== -1) {
+      if (line.toLowerCase().indexOf("q:") !== -1) {
         index++;
         return;
       }
-      if (line.toLowerCase().indexOf("### a") !== -1) {
+      if (line.toLowerCase().indexOf("a:") !== -1) {
         index++;
         return;
       }
