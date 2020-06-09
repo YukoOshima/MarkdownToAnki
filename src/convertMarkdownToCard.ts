@@ -27,6 +27,7 @@ export const generateCardsToAnki = async (
   deckName: string
 ) => {
   const cardBodys: any[] = [];
+  // console.log("markdownArray", markdownArray);
   while (markdownArray.length) {
     const newCards = markdownArray.splice(0, 2);
     const front = md.render(newCards[0]);

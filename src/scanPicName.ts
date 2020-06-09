@@ -19,8 +19,10 @@ export async function scanImgs(directoryPath: string) {
 
 export async function generatePicUploadBody(file: string) {
   const lerna = await Jimp.read(file);
-  const data = await lerna.greyscale().getBase64Async(Jimp.MIME_JPEG);
-  console.log("data", data);
+  const data = await lerna
+    .quality(80)
+    .greyscale()
+    .getBase64Async(Jimp.MIME_JPEG);
   const body = {
     action: "storeMediaFile",
     params: {

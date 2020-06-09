@@ -18,8 +18,9 @@ export async function getMarkdownContent(fileName: string) {
       if (line.toLowerCase().indexOf("a:") !== -1) {
         index++;
       }
-      if (typeof cards[index] === "undefined") cards[index] = "";
-      cards[index] += line + "\n";
+      if (index === -1) return;
+      if (!cards[index]) cards[index] = "";
+      cards[index] += line;
     });
     await once(rl, "close");
     return cards;
