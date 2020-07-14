@@ -23,10 +23,7 @@ async function main() {
   try {
     const picBody = await scanImgs(picPath);
     const markdownContent = await getMarkdownContent(fileName);
-    if (markdownContent.length % 2 !== 0) {
-      console.log("The number of Q and A is not match");
-      return;
-    }
+    console.log(markdownContent);
     const cardBody = await generateCardsToAnki(markdownContent, deckName);
     console.log("upload cardbody");
     const cardResp = await postAnkiConnect(cardBody);
