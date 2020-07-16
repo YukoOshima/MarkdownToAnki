@@ -29,9 +29,9 @@ export function generateAddClozeNode(content: string, deck = "temp") {
     params: {
       note: {
         deckName: deck,
-        modelName: "markdownCloze",
+        modelName: "Cloze",
         fields: {
-          content,
+          Text: content,
         },
         options: {
           allowDuplicate: false,
