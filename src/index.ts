@@ -1,40 +1,22 @@
-#! /usr/bin/env node
-
-import { getMarkdownContent } from "./renderMarkdownToCard";
-import { postAnkiConnect } from "./addAnki";
-import { generateCardsToAnki } from "./convertMarkdownToCard";
+import {Command} from "commander";
+import fs from "fs";
 import path from "path";
-import { scanImgs } from "./scanPicName";
+import {convertToMarkdown, parseNote} from "./parse";
+import {createAddNoteBody} from "./action";
+import { postToAnki } from "./util";
 
-const picPath = process.cwd();
-const fileName = process.argv[2];
-const deckName = process.argv[3];
-console.log(`picPath : ${picPath}`);
-console.log(`fileName : ${fileName}`);
-console.log(`deckName : ${deckName}`);
+const program = new Command();
 
-if (
-  process.argv.length !== 3 &&
-  (typeof fileName !== "string" || typeof deckName !== "string")
-) {
-  console.log("Please input filename | deckName");
-}
-async function main() {
-  try {
-    const picBody = await scanImgs(picPath);
-    const markdownContent = await getMarkdownContent(fileName);
-    console.log(markdownContent);
-    const cardBody = await generateCardsToAnki(markdownContent, deckName);
-    console.log("upload cardbody");
-    const cardResp = await postAnkiConnect(cardBody);
-    console.log(cardResp);
-    console.log("upload images");
-    const imageResp = await postAnkiConnect(picBody);
-    console.log(imageResp);
-    // const ankiResp = await postAnkiConnect([cardBody[0]]);
-  } catch (err) {
-    console.log(err);
-  }
-}
+program.command("file <source>").action(async (source: string) => {
+    const filePath = path.resolve(source);
+    if (fs.existsSync(filePath)) {
+        const resource = fs.readFileSync(filePath, {encoding: "utf-8"});
+        const {targetDeck, cardContentArray} = parseNote(resource);
+        const markdownContent = convertToMarkdown(cardContentArray);
+        const body = createAddNoteBody(targetDeck, 'markdown', markdownContent)
+        const resp = await postToAnki(body);
+        console.log(resp)
+    }
+});
 
-main();
+program.parse(process.argv);
