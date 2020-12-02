@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import {Command} from "commander";
 import fs from "fs";
 import path from "path";
@@ -11,10 +13,11 @@ program.command("file <source>").action(async (source: string) => {
     const filePath = path.resolve(source);
     if (fs.existsSync(filePath)) {
         const resource = fs.readFileSync(filePath, {encoding: "utf-8"});
-        const {targetDeck, cardContentArray} = parseNote(resource);
-        const markdownContent = convertToMarkdown(cardContentArray);
+        const {targetDeck, cardContent} = parseNote(resource);
+        const markdownContent = convertToMarkdown(cardContent);
         const body = createAddNoteBody(targetDeck, 'markdown', markdownContent)
         const resp = await postToAnki(body);
+        console.log('targetDeck', targetDeck);
         console.log(resp)
     }
 });
