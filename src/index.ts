@@ -29,7 +29,6 @@ program
       const resp = await postToAnki(body);
       console.log("targetDeck", targetDeck);
       console.log("resp", resp);
-      console.log(JSON.stringify(body));
     }
   });
 
