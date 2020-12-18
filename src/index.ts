@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import fs from "fs";
 import path from "path";
-import { convertToMarkdown, parseNote } from "./parse";
-import { createAddNoteBody } from "./action";
-import { postToAnki } from "./util";
-import { createUploadImageBody } from "./convertImg";
+import { createAnkiCard } from "./utils/createAnkiCard";
+import { getFiles } from "./utils/getFiles";
+import { uploadImages } from "./utils/uploadImages";
 
 const program = new Command();
 
@@ -15,21 +13,24 @@ program
   .action(async (source: string, img: string) => {
     console.log(source);
     console.log(img);
-    const uploadImgBody = await createUploadImageBody(img);
-    const uploadResp = await postToAnki(uploadImgBody);
+    const uploadResp = await uploadImages(img);
     console.log(uploadResp);
-    console.log(uploadImgBody.map((item) => item.params.filename));
     const filePath = path.resolve(source);
-    if (fs.existsSync(filePath)) {
-      const resource = fs.readFileSync(filePath, { encoding: "utf-8" });
-      const { targetDeck, cardContent } = parseNote(resource);
-      const markdownContent = convertToMarkdown(cardContent);
+    await createAnkiCard(filePath);
+  });
 
-      let body = createAddNoteBody(targetDeck, "Basic", markdownContent);
-      const resp = await postToAnki(body);
-      console.log("targetDeck", targetDeck);
-      console.log("resp", resp);
-    }
+program
+  .command("path <source> <img>")
+  .action(async (source: string, img: string) => {
+    const assetPath = path.resolve(img);
+    const uploadResp = await uploadImages(assetPath);
+    console.log(uploadResp);
+    const filesPath = getFiles(source);
+    console.log(filesPath);
+    const resp = await Promise.all(
+      filesPath.map((eachFilePath) => createAnkiCard(eachFilePath))
+    );
+    console.log(resp);
   });
 
 program.parse(process.argv);

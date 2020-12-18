@@ -1,6 +1,6 @@
 import MarkdownIt from "markdown-it";
 import highlightJS from "highlight.js";
-import { normalizeHighlightLang } from "./util";
+import { normalizeHighlightLang } from "./utils/util";
 import { convertImgPath } from "./convertImg";
 
 const deckRgx = /(?<=ANKISTART:).*/gm;
@@ -62,11 +62,13 @@ export function parseNote(content: string) {
   }
   let rawCardContent = content.match(cardRawContentRgx);
 
-  if (rawCardContent === null) rawCardContent = [];
+  if (rawCardContent) {
+    const cardContent = parseBlockContent(rawCardContent[0]);
 
-  const cardContent = parseBlockContent(rawCardContent[0]);
-
-  return { targetDeck, cardContent };
+    return { targetDeck, cardContent };
+  } else {
+    return { targetDeck: "", cardContent: [] };
+  }
 }
 
 export function convertToMarkdown(
